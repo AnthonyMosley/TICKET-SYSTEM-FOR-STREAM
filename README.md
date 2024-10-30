@@ -39,4 +39,8 @@ The journey:
 
 ## Why This Exists
 Some systems keep track of everything effortlessly. This isn’t one of them, but it tries. Sort of.
-```
+
+## Post notes
+Working on developing a dynamic website for this.
+Tickets are inserted by CSV for now, Plans to move to tinydb or something similar.
+I use SAMMI to capture the tickets.
