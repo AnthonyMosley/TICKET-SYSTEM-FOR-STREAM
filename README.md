@@ -44,3 +44,4 @@ Some systems keep track of everything effortlessly. This isn’t one of them, bu
 Working on developing a dynamic website for this.
 Tickets are inserted by CSV for now, Plans to move to tinydb or something similar.
 I use SAMMI to capture the tickets.
+Tickettracker.json is the button i use to capture it if yu need reference
