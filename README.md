@@ -1,4 +1,4 @@
-```markdown
+
 # Ticket Tracker (Because You Can’t Do Everything at Once)
 
 So, you decided to keep track of tickets during your stream. You’ll still get overwhelmed, but now you’ll have a window to watch the chaos unfold in real time. Welcome to **Ticket Tracker**.
