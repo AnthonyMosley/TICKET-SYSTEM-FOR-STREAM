@@ -6,7 +6,7 @@ So, you decided to keep track of tickets during your stream. You’ll still get 
 ## Features
 - **Dark Mode**: Because who doesn’t have a headache already?
 - **Ticket Stages**: The system manages tickets through the stages of **Open**, **In Progress**, and **Complete**. It’s like watching grass grow, but with more text.
-- **Priority Levels**: High-priority tickets are marked in red, as if you could actually get to them any faster.
+- **Priority Levels**: High-priority tickets are marked in red, as if you could actually get to them any faster. (Priority is automatically determined by it being a Subscriber by default)
 - **Comments Section**: Every ticket has a comments section, because everyone needs more scrolling in their life.
 
 ## Installation
