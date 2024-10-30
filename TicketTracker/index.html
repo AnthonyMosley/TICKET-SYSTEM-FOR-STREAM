@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ticket Tracker</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #open, #complete {
+            float: left;
+            width: 45%;
+            margin: 2%;
+            border: 1px solid #ccc;
+            min-height: 400px;
+            padding: 10px;
+        }
+        #open h2, #complete h2 {
+            text-align: center;
+        }
+        .ticket {
+            padding: 10px;
+            margin: 5px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            cursor: move;
+        }
+        .clearfix::after {
+            content: "";
+            clear: both;
+            display: table;
+        }
+    </style>
+</head>
+<body>
+    <div class="clearfix">
+        <div id="open">
+            <h2>Open</h2>
+        </div>
+        <div id="complete">
+            <h2>Complete</h2>
+        </div>
+    </div>
+
+    <script>
+        let statusData = {};
+
+        function loadStatus() {
+            if (localStorage.getItem('statusData')) {
+                statusData = JSON.parse(localStorage.getItem('statusData'));
+            }
+        }
+
+        function saveStatus() {
+            localStorage.setItem('statusData', JSON.stringify(statusData));
+        }
+
+        function generateTicketID(ticket) {
+            return `${ticket['Username']}_${ticket['Issue']}_${ticket['Time Placed']}`;
+        }
+
+        function loadTickets() {
+            fetch('tickets.csv')
+                .then(response => response.text())
+                .then(data => {
+                    const lines = data.trim().split('\n');
+                    const headers = lines[0].split(',');
+                    const tickets = lines.slice(1);
+                    document.getElementById('open').innerHTML = '<h2>Open</h2>';
+                    document.getElementById('complete').innerHTML = '<h2>Complete</h2>';
+
+                    tickets.forEach(line => {
+                        const values = line.split(',');
+                        if (values.length !== headers.length) return;
+                        const ticket = {};
+                        headers.forEach((header, index) => {
+                            ticket[header.trim()] = values[index].trim();
+                        });
+                        const ticketID = generateTicketID(ticket);
+                        const status = statusData[ticketID] || 'Open';
+                        const ticketDiv = document.createElement('div');
+                        ticketDiv.className = 'ticket';
+                        ticketDiv.draggable = true;
+                        ticketDiv.innerText = `${ticket['Username']} - ${ticket['Issue']} (${ticket['Time Placed']})`;
+                        ticketDiv.dataset.ticketId = ticketID;
+                        ticketDiv.addEventListener('dragstart', dragStart);
+
+                        if (status === 'Open') {
+                            document.getElementById('open').appendChild(ticketDiv);
+                        } else {
+                            document.getElementById('complete').appendChild(ticketDiv);
+                        }
+                    });
+                });
+        }
+
+        function dragStart(event) {
+            event.dataTransfer.setData('text/plain', event.target.dataset.ticketId);
+        }
+
+        function allowDrop(event) {
+            event.preventDefault();
+        }
+
+        function drop(event) {
+            event.preventDefault();
+            const ticketID = event.dataTransfer.getData('text/plain');
+            const ticketDiv = document.querySelector(`[data-ticket-id='${ticketID}']`);
+            if (event.currentTarget.id === 'complete') {
+                statusData[ticketID] = 'Complete';
+            } else {
+                statusData[ticketID] = 'Open';
+            }
+            saveStatus();
+            event.currentTarget.appendChild(ticketDiv);
+        }
+
+        document.getElementById('open').addEventListener('dragover', allowDrop);
+        document.getElementById('open').addEventListener('drop', drop);
+
+        document.getElementById('complete').addEventListener('dragover', allowDrop);
+        document.getElementById('complete').addEventListener('drop', drop);
+
+        // Initial load
+        loadStatus();
+        loadTickets();
+
+        // Refresh every 30 seconds
+        setInterval(() => {
+            loadStatus();
+            loadTickets();
+        }, 30000);
+    </script>
+</body>
+</html>
